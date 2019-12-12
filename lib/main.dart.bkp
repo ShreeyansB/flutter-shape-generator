@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: Xyz());
+  }
+}
+
+class Xyz extends StatefulWidget {
+  @override
+  _XyzState createState() => _XyzState();
+}
+
+class _XyzState extends State<Xyz> {
+  var shape = ['Circle', 'Square'];
+  var currentItem = 'Circle';
+  var inputText = TextEditingController();
+  bool pressed = false;
+  double size = 50;
+  double shapeRadius = 0;
+
+  void dispose() {
+    inputText.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: Color(0xff08121a),
+        appBar: AppBar(
+          title: Text('SHAPE CHANGER',
+              style: TextStyle(
+                  color: Color(0xff08121a),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1)),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: Colors.blue[700],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
+          ),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 50,
+            ),
+            Text(
+              "SHAPE",
+              style: TextStyle(
+                  color: Colors.blue[700],
+                  fontSize: 17,
+                  letterSpacing: 3,
+                  fontWeight: FontWeight.bold),
+            ),
+            Theme(
+              data: Theme.of(context).copyWith(
+                canvasColor: Colors.grey[900],
+              ),
+              child: DropdownButton<String>(
+                icon: Icon(Icons.keyboard_arrow_down),
+                items: shape.map((String dropDownStringItem) {
+                  return DropdownMenuItem(
+                    value: dropDownStringItem,
+                    child: Text(
+                      dropDownStringItem,
+                      style: TextStyle(color: Colors.grey[400], fontSize: 19),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String value) {
+                  setState(() {
+                    this.currentItem = value;
+                    print(value);
+                    if(value == 'Circle')
+                      shapeRadius = 10000;
+                    else
+                      shapeRadius = 0;
+                  });
+                },
+                value: currentItem,
+              ),
+            ),
+            SizedBox(height: 30),
+            Text(
+              "SIZE",
+              style: TextStyle(
+                  color: Colors.blue[700],
+                  fontSize: 17,
+                  letterSpacing: 3,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 15),
+            Padding(
+              padding: EdgeInsets.fromLTRB(60, 0, 60, 0),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                controller: inputText,
+                decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide(color: Colors.blue)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(17),
+                        borderSide: BorderSide(color: Colors.blue)),
+                    hintText: "Enter shape size",
+                    hintStyle: TextStyle(color: Colors.blueGrey[900])),
+                style: TextStyle(color: Colors.blue),
+                onChanged: (text) {
+                  setState(() {
+                    size = double.parse(text);
+                  });
+                },
+              ),
+            ),
+            SizedBox(height: 50),
+            Container(
+              height: size ,
+              width: size,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(shapeRadius),
+                gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    stops: [0,0.7],
+                    colors: [Color(0xff4facfe), Color(0xff4a7ef7)]),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
